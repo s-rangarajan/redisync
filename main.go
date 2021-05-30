@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -28,6 +29,8 @@ func main() {
 	http.HandleFunc("/update_cart", func(w http.ResponseWriter, r *http.Request) {
 		UpdateCart(w, r, cartUpdater)
 	})
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func NewRedisClient(options *redis.Options) (*redis.Client, error) {

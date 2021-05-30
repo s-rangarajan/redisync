@@ -30,7 +30,7 @@ func (r *RedisCartReader) ReadCartWithContext(ctx context.Context, cartID string
 
 	var cart Cart
 	if err := json.Unmarshal([]byte(serializedData), &cart); err != nil {
-		return Cart{}, fmt.Errorf("error unmarshaling cart JSON: %w", err)
+		return Cart{}, fmt.Errorf("error unmarshaling cart from redis: %w", err)
 	}
 
 	return cart, nil
