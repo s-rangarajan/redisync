@@ -5,17 +5,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 )
 
-// TODO: define as you best see fit
-var updateTimeout = 2 * time.Second
-
 // TODO: log and report errors to monitoring tools appropriately
-func UpdateCart(w http.ResponseWriter, r *http.Request, cartUpdater CartUpdater) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), updateTimeout)
-	defer cancelFunc()
-
+func UpdateCartWithContext(ctx context.Context, cartUpdater CartUpdater, w http.ResponseWriter, r *http.Request) {
 	var updates Cart
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&updates); err != nil {

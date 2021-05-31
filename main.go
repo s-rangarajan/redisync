@@ -10,6 +10,10 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+// TODO: define as you best see fit
+var readTimeout = 2 * time.Second
+var updateTimeout = 2 * time.Second
+
 func main() {
 	// TODO: read from env/config file as you best see fit
 	client, err := NewRedisClient(&redis.Options{
@@ -21,15 +25,22 @@ func main() {
 		panic(err)
 	}
 
+	// TODO: replace with signal handling context
+	ctx := context.TODO()
+
 	cartUpdater := NewRedisCartUpdater(client)
 	cartReader := NewRedisCartReader(client)
 
 	// TODO: use a router of your choice and path variables instead of reqeust params
 	http.HandleFunc("/read_cart", func(w http.ResponseWriter, r *http.Request) {
-		ReadCart(w, r, cartReader)
+		// TODO: handle with signal context
+		ctx, _ := context.WithTimeout(ctx, readTimeout)
+		ReadCartWithContext(ctx, cartReader, w, r)
 	})
 	http.HandleFunc("/update_cart", func(w http.ResponseWriter, r *http.Request) {
-		UpdateCart(w, r, cartUpdater)
+		// TODO: handle with signal context
+		ctx, _ := context.WithTimeout(ctx, readTimeout)
+		UpdateCartWithContext(ctx, cartUpdater, w, r)
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

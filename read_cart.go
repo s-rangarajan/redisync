@@ -5,17 +5,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 )
 
-// TODO: define as you best see fit
-var readTimeout = 2 * time.Second
-
 // TODO: log and report errors to monitoring tools appropriately
-func ReadCart(w http.ResponseWriter, r *http.Request, cartReader CartReader) {
-	ctx, cancelFunc := context.WithTimeout(context.Background(), updateTimeout)
-	defer cancelFunc()
-
+func ReadCartWithContext(ctx context.Context, cartReader CartReader, w http.ResponseWriter, r *http.Request) {
 	// TODO: use path variables instead of request params
 	cartID, ok := r.URL.Query()["cart_id"]
 	if !ok || len(cartID[0]) < 1 {

@@ -9,6 +9,8 @@ type Cart struct {
 	CartDetails map[ItemID]ItemDetails `json:"cart_details"`
 }
 
+// TODO: define domain level checks
+// such as validity of a Cart
 func NewCart(cartID string) Cart {
 	cart := Cart{
 		CartID:      cartID,
