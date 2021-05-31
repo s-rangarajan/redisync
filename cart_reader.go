@@ -24,13 +24,15 @@ func NewRedisCartReader(client *redis.Client) *RedisCartReader {
 
 func (r *RedisCartReader) ReadCartWithContext(ctx context.Context, cartID string) (Cart, error) {
 	serializedData, err := r.client.Get(ctx, cartID).Result()
-	if err != nil {
+	if err != nil && err != redis.Nil {
 		return Cart{}, fmt.Errorf("error getting cart from redis: %w", err)
 	}
 
-	var cart Cart
-	if err := json.Unmarshal([]byte(serializedData), &cart); err != nil {
-		return Cart{}, fmt.Errorf("error unmarshaling cart from redis: %w", err)
+	cart := NewCart(cartID)
+	if err != redis.Nil {
+		if err := json.Unmarshal([]byte(serializedData), &cart); err != nil {
+			return Cart{}, fmt.Errorf("error unmarshaling cart from redis: %w", err)
+		}
 	}
 
 	return cart, nil

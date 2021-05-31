@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	// TODO: read from env/config file as you best see fit
 	client, err := NewRedisClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
@@ -23,6 +24,7 @@ func main() {
 	cartUpdater := NewRedisCartUpdater(client)
 	cartReader := NewRedisCartReader(client)
 
+	// TODO: use a router of your choice and path variables instead of reqeust params
 	http.HandleFunc("/read_cart", func(w http.ResponseWriter, r *http.Request) {
 		ReadCart(w, r, cartReader)
 	})
